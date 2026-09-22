@@ -1,0 +1,48 @@
+name: Publish Solder Web release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag (for example v1.0.1.4)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
+          persist-credentials: false
+      - name: Validate public packages
+        run: python3 scripts/validate_release.py "$RELEASE_TAG"
+      - name: Publish complete release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_TAG" \
+            packages/"$RELEASE_TAG"/*.ota \
+            packages/"$RELEASE_TAG"/*.espota \
+            packages/"$RELEASE_TAG"/SHA256SUMS.txt \
+            --repo "$GITHUB_REPOSITORY" --verify-tag --draft \
+            --title "Solder Web $RELEASE_TAG" \
+            --notes-file "release-notes/$RELEASE_TAG.md"
+          gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --draft=false --latest
