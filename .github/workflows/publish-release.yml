@@ -31,7 +31,9 @@ jobs:
           ref: ${{ inputs.tag || github.ref_name }}
           persist-credentials: false
       - name: Validate public packages
-        run: python3 scripts/validate_release.py "$RELEASE_TAG"
+        run: |
+          python3 -B -m unittest discover -s scripts -v
+          python3 -B scripts/validate_release.py "$RELEASE_TAG"
       - name: Publish complete release
         env:
           GH_TOKEN: ${{ github.token }}
