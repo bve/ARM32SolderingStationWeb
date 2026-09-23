@@ -1,0 +1,4 @@
+e14b67ac9d77cb908a4242455c750019dc833aaf2cdd5dc89bbd2984873897bf  ARM32SolderingStationWeb-board_v1-v1.0.2.2.ota
+59174158166b91201d804b2f434ff78f9dff27b460eabc047840086e31ea311b  ARM32SolderingStationWeb-board_v2-v1.0.2.2.ota
+585b56afca7bc5bdca5e700555a733c43f906c3cec6f993fe15a070c74baf54e  ARM32SolderingStationWeb-board_v3-v1.0.2.2.ota
+6700f4a9863c1c86b3eafe259d7b9b2739229d3c5618debc93da4862f1cc33b5  ARM32SolderingStationWeb-esp32c3-v1.0.2.2.espota
